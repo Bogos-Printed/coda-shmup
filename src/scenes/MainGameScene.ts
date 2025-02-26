@@ -143,6 +143,25 @@ export class MainGameScene extends Scene
         }
     }
 
+    // Filled group with items to avoid lag spikes in case of many instantiation of items in the same frame
+    private warmGroupItems(initialQuantity: number, group: Physics.Arcade.Group) {
+        if (group.getLength() >= initialQuantity) {
+            return;
+        }
+
+        for (let i: number = 0; i < initialQuantity; i++) {
+            group.get();
+        }
+
+        // We disable them all immediately
+        if (group.classType && typeof group.classType.prototype.disable === 'function') {
+            group.children.each((item: GameObjects.GameObject) => {
+                (item as any).disable();
+                return true;
+            });
+        }
+    }
+
     private selectPlayerShip (playerShipId: number)
     {
         const playerShipsData = this.cache.json.get('playerShips') as PlayerShipsData;
