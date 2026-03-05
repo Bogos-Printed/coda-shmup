@@ -41,7 +41,7 @@ export default class Movement implements IComponent {
         const scene = entity.scene.scale.width
         const amplitude = 400;
         const center = scene/2;
-        const frequency = 0.02 + this._speed/100;
+        const frequency = 0.01 + this._speed/100;
 
         
         entity.y += this._speed * deltaTime;
