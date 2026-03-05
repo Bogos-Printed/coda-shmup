@@ -14,6 +14,7 @@ export default class Enemy extends Entity {
     };
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;
     private _shootTimer: Phaser.Time.TimerEvent;
+    private _movementType: number;
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         this.addComponent(new Health(1, this));
@@ -49,7 +50,7 @@ export default class Enemy extends Entity {
     public enable(x: number, y: number) {
         this.enableBody(true, x, y - this.displayHeight, true, true);
         this._shootTimer.reset(this._shootTimerConfig);
-
+        this._movementType = Phaser.Math.Between(0,1);
         const health = this.getComponent(Health);
         health?.on(Health.CHANGE_EVENT, () => {
             this.setTintFill(0xffffff);
@@ -100,7 +101,10 @@ export default class Enemy extends Entity {
         }
 
         if (!this.isTinted)
-            this.getComponent(Movement)?.moveVertically(this, deltaTime);
+            if (this._movementType)
+                this.getComponent(Movement)?.moveVertically(this, deltaTime);
+            else 
+                this.getComponent(Movement)?.moveWave(this, deltaTime * 0.4, 50);
         else
             this.getComponent(Movement)?.moveVertically(this, deltaTime * 0.5);
     }
