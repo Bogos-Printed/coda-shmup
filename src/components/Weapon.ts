@@ -9,17 +9,17 @@ export default class Weapon implements IComponent {
     public enabled: boolean = true;
 
     private readonly _bullets: Physics.Arcade.Group;
-    private readonly _bulletData: BulletData;
+    private _bulletData: BulletData;
     private _weapon: WeaponData;
 
-    constructor(bullets: Physics.Arcade.Group, bulletData: BulletData, weaponConfig: WeaponData) {
+    constructor(bullets: Physics.Arcade.Group, weaponConfig: WeaponData) {
         if (!bullets) {
             console.error("Weapon 'bullets' group cannot be null or undefined");
         }
 
         this._bullets = bullets;
-        this._bulletData = bulletData;
         this._weapon = weaponConfig;
+        this._bulletData = weaponConfig.bulletBody;
     }
 
     public spreadshot(source: Entity) {
@@ -33,7 +33,7 @@ export default class Weapon implements IComponent {
         for (let i = 0; i<amount; i++) {
             const angle = source.rotation + startAngle + step * i;
             const forward = new Phaser.Math.Vector2(1,0).rotate(angle);
-            const velocity = forward.clone().scale(this._bulletData.speed);
+            const velocity = forward.clone().scale(this._weapon.bulletSpeed);
             
             const bullet: Bullet = this._bullets.get() as Bullet;
 
@@ -49,6 +49,7 @@ export default class Weapon implements IComponent {
 
     public setWeaponData(data: WeaponData) {
         this._weapon = data;
+        this._bulletData = data.bulletBody;
     }
 
     public shoot(source: Entity) {
