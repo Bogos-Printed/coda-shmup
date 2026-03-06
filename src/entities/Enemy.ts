@@ -1,4 +1,3 @@
-import type {BulletData} from '../gameData/BulletData.ts';
 import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";

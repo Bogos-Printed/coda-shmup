@@ -1,6 +1,5 @@
 import {Input, Scene} from "phaser";
 import {PlayerShipData, PlayerShipsData} from "../gameData/PlayerShipsData.ts";
-import type {BulletData} from "../gameData/BulletData.ts";
 import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
@@ -30,7 +29,7 @@ export default class Player extends Entity {
         this.addComponent(new Health(3, this));
         this.addComponent(new Movement());
 
-        this.selectPlayerWeapon(3);
+        this.selectPlayerWeapon(1);
 
         this.addComponent(new Weapon(bulletsGroup, this._weaponsData));
         
