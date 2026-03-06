@@ -2,12 +2,12 @@
   "1": {
     "name": "singlefire",
     "type": "single",
-    "firerate": 0.5,
+    "firerate": 0.4,
     "spread": 0,
     "bullets": 1,
-    "bulletSpeed": 600,
+    "bulletSpeed": 1024,
     "bulletBody": {
-      "width": 12,
+      "width": 14,
       "height": 14,
       "color": "0x66f0ff",
       "damage": 1
