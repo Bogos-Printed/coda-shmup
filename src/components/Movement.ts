@@ -33,4 +33,18 @@ export default class Movement implements IComponent {
 
         entity.y += this._speed * deltaTime;
     }
+
+    public moveWave(entity: Entity, deltaTime: number, waveOffset: number) {
+        if (!this.enabled)
+            return;
+        
+        const scene = entity.scene.scale.width
+        const amplitude = 400;
+        const center = scene/2;
+        const frequency = 0.01 + this._speed/100;
+
+        
+        entity.y += this._speed * deltaTime;
+        entity.x = center + Math.sin(entity.y * frequency + waveOffset) * amplitude;
+    }
 }

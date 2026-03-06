@@ -1,24 +1,17 @@
 import {Input, Scene} from "phaser";
 import {PlayerShipData, PlayerShipsData} from "../gameData/PlayerShipsData.ts";
-import type {BulletData} from "../gameData/BulletData.ts";
 import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
+import { WeaponData } from "../gameData/WeaponData.ts";
 
 export default class Player extends Entity {
-    private readonly _bulletData: BulletData = {
-        width: 12,
-        height: 4,
-        color: 0xffe066,
-        speed: 1024,
-        damage: 1
-    };
-
     private readonly _cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
     private _playerShipData: PlayerShipData;
     private _rateOfFire: number;
     private _lastShotTime: number;
+    private _weaponsData: WeaponData;
 
     constructor(scene: Scene, x: number, y: number) {
         super(scene, x, y, 'sprites');
@@ -35,13 +28,15 @@ export default class Player extends Entity {
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         this.addComponent(new Health(3, this));
         this.addComponent(new Movement());
-        this.addComponent(new Weapon(bulletsGroup, this._bulletData));
 
+        this.selectPlayerWeapon(1);
+
+        this.addComponent(new Weapon(bulletsGroup, this._weaponsData));
+        
         this.angle = -90;
-
+        
         this.selectPlayerShip(1);
 
-        this._rateOfFire = 0.5;
         this._lastShotTime = 0;
 
         this.getComponent(Health)?.on(Health.CHANGE_EVENT, () => {
@@ -63,6 +58,18 @@ export default class Player extends Entity {
 
         this.getComponent(Movement)?.setSpeed(this._playerShipData.movementSpeed);
     }
+
+    public selectPlayerWeapon(weaponTypeDataId: number) {
+        const weaponTypeData = this.scene.cache.json.get('weapons')
+        
+        this._weaponsData = weaponTypeData[weaponTypeDataId]
+
+        const weaponComponent = this.getComponent(Weapon);
+        weaponComponent?.setWeaponData(this._weaponsData);
+
+        this._rateOfFire = this._weaponsData.firerate;
+    }
+
 
     preUpdate(timeSinceLaunch: number, deltaTime: number) {
         super.preUpdate(timeSinceLaunch, deltaTime);
