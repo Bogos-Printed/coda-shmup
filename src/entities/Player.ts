@@ -8,14 +8,6 @@ import Weapon from "../components/Weapon.ts";
 import { WeaponData } from "../gameData/WeaponData.ts";
 
 export default class Player extends Entity {
-    private readonly _bulletData: BulletData = {
-        width: 12,
-        height: 14,
-        color: 0xffe066,
-        speed: 1024,
-        damage: 1
-    };
-
     private readonly _cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
     private _playerShipData: PlayerShipData;
     private _rateOfFire: number;
@@ -37,11 +29,13 @@ export default class Player extends Entity {
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         this.addComponent(new Health(3, this));
         this.addComponent(new Movement());
-        this.addComponent(new Weapon(bulletsGroup, this._bulletData, this._weaponsData));
+
+        this.selectPlayerWeapon(3);
+
+        this.addComponent(new Weapon(bulletsGroup, this._weaponsData));
         
         this.angle = -90;
         
-        this.selectPlayerWeapon(3);
         this.selectPlayerShip(1);
 
         this._lastShotTime = 0;

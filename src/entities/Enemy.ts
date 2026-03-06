@@ -3,23 +3,21 @@ import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
+import { WeaponData } from '../gameData/WeaponData.ts';
 
 export default class Enemy extends Entity {
-    private readonly _bulletData: BulletData = {
-        width: 12,
-        height: 12,
-        color: 0xf25f5c,
-        speed: 512,
-        damage: 1,
-    };
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;
     private _shootTimer: Phaser.Time.TimerEvent;
     private _movementType: number;
+    private _weaponData: WeaponData;
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         this.addComponent(new Health(1, this));
         this.addComponent(new Movement(0.2));
-        this.addComponent(new Weapon(bulletsGroup, this._bulletData));
+
+        const weapons = this.scene.cache.json.get('weapons');
+        this._weaponData = weapons[1]
+        this.addComponent(new Weapon(bulletsGroup, this._weaponData));
 
         this.angle = 90;
 
